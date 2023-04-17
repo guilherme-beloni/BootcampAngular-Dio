@@ -1,16 +1,20 @@
+function convertTypesToLiHtml(pokemonsTypes) {
+    return pokemonsTypes.map((typeSlot) => `<li class="type">${typeSlot.type.name}</li>`)
+}
+
+
 
 function convertPokemonToLiHtml(pokemon) {
     return `
         <li class="pokemon">
-            <span class="number">#001</span>
+            <span class="number">#${pokemon.order}</span>
             <span class="name">${pokemon.name}</span>
                 
             <div class="detail">
                 <ol class="types">
-                    <li class="type">Grass</li>
-                    <li class="type">Poison</li>
+                    ${convertTypesToLiHtml(pokemon.types).join('')}
                 </ol>
-                <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png" alt="${pokemon.name}">
+                <img src="${pokemon.sprites.other.dream_world.front_default}" alt="${pokemon.name}">
             </div>
                 
         </li>`
@@ -19,15 +23,11 @@ function convertPokemonToLiHtml(pokemon) {
 const pokemonList = document.getElementById('pokemonList');
 
 pokeApi.getPokemons()
-    .then( (pokemons) => {
-        for (let i = 0; i < pokemons.length; i++){
-            const pokemon = pokemons[i];
-            pokemonList.innerHTML += convertPokemonToLiHtml(pokemon)
-        }    
-    })
-
-    
-    .catch( (error) => console.log(error))
+    .then( (pokemons = []) => {
+        const newHtmp = pokemonList.innerHTML += pokemons.map(convertPokemonToLiHtml).join('')
+        pokemonList.innerHTML = newHtmp
+})
+        
 
 
     console.log('Sucessfully');
